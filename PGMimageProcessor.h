@@ -1,7 +1,7 @@
 #ifndef PGMimageProcessor_H
 #define PGMimageProcessor_H
 
-#include "ConnectedComponent.h"
+#include "ConnectedComponents.h"
 #include <queue>
 #include <string>
 #include <utility>
@@ -18,13 +18,18 @@
 
 // class defination
 
+struct Pixel {
+    int x;
+    int y;
+};
+
 class PGMimageProcessor {
 
     private:
     // container to store components
     std::vector< std::shared_ptr<ConnectedComponent> > components; 
     //input image
-    unsigned char ** inputImage; 
+    unsigned char ** input; 
     std::string filepath; 
     int height, width; 
 
@@ -33,28 +38,31 @@ class PGMimageProcessor {
     int smallest_size;
 
     public:
-   
     PGMimageProcessor();
-    PGMimageProcessor(std::string nm);
+    PGMimageProcessor(std::string name);
     PGMimageProcessor(const PGMimageProcessor & other); 
     PGMimageProcessor(PGMimageProcessor && other); 
     ~PGMimageProcessor(); 
 
     // methods
-    bool readImage();
     int extractComponents(unsigned char threshold, int minValidSize);
     int filterComponentsBySize(int minSize, int maxSize);
     bool writeComponents(const std::string & outFilename);
+    void readImage(std::string file);
     int getComponentCount(void) const;
     int getLargestSize(void) const;
     int getSmallestSize(void) const;
     void printComponentData(const ConnectedComponent & theComponent) const;
     void display() const;
+    void log(std::string message);
+    
+    void processConnectedComponets(
+        std::queue<std::pair<int, int>> &myque,
+        std::pair<int, int> coordinate);
+
 
 
 
 };
-
-
 
 #endif
